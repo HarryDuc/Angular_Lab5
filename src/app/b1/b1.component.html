@@ -1,0 +1,85 @@
+<div class="container">
+  <div class="text-right mt-1">
+    <button class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#modalId">
+      Cart ({{ totalItems() }})
+    </button>
+  </div>
+
+  <div class="row">
+    <div class="col-6 col-sm-3 text-center" *ngFor="let item of products">
+      <img [src]="item.image" alt="" />
+      <h5>{{ item.title }}</h5>
+      <h6 class="text-danger">{{ item.price | currency : "VND" }}</h6>
+      <p class="text-center">
+        <input [(ngModel)]="item.quantity" type="number" class="form control" min="1" />
+      </p>
+      <button (click)="checkProductStock(item, item.quantity)" class="btn btn- sm btn-primary">
+        Add to Cart
+      </button>
+    </div>
+  </div>
+
+
+  <!-- Modal Body -->
+  <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+  <div class="modal fade" id="modalId" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
+    aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitleId">
+            Modal title
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered mb-0">
+            <tbody>
+              <tr *ngFor="let items of cartItems; let i = index">
+                <td>{{ items.title }}</td>
+                <td style="width:220px">QTY:
+                    <input [(ngModel)]="items.quantity" class="form-control" type="number" min="1">
+                </td>
+                <td class="text-right">{{ items.price | currency: 'VND' }}</td>
+                <td class="text-right">{{ items.totalPrice | currency: 'VND' }}</td>
+                <td>
+                    <button (click)="removeItem(i)">
+                        <span class="bi bi-trash"></span>
+                    </button>
+                </td>
+              </tr>
+              @if(cartItems.length == 0){
+                <tr>
+                  <td colspan="4" class="text-center">Cart is empty</td>
+                </tr>
+              }
+              @if (cartItems.length > 0) {
+                <tr>
+                  <td></td>
+                  <td class="text-right">Cart Total </td>
+                  <td></td>
+                  <td class="text-right text-danger font-weight-bold">
+                    {{Total()| currency:"VND"}}
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Optional: Place to the bottom of scripts -->
+  <script>
+    const myModal = new bootstrap.Modal(
+      document.getElementById("modalId"),
+      options,
+    );
+  </script>
+</div>

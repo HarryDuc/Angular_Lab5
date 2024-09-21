@@ -1,0 +1,117 @@
+<div class="container">
+  <!-- <div class="row">
+    <div class="col-12 col-sm-4 col-md-4 col-lg-4 mt-2 ">
+      <input type="text" [(ngModel)]="searching" placeholder="Tìm sản phẩm" class="input  form-control mr-sm-2">
+    </div>
+    <div class="col-12 col-sm-4 col-md-4 col-lg-4 mt-2 form-inline my-2 my-lg-0">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit" data-bs-toggle="modal"
+        data-bs-target="#modalId">
+        Giỏ hàng của bạn !
+        @if(itemcount()==0){
+        <span>Bạn chưa mua hàng</span>
+        }
+        @else {
+        Bạn đã mua {{itemcount()}} hàng !
+        }
+      </button>
+    </div>
+  </div> -->
+  <div class="row">
+    <!-- hiển thị sản phẩm dùng @for -->
+    @for (item of filterName(); track $index) {
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mt-2 ">
+      <div class="card text-center border-primary" style="height: 100%;">
+        <div class="card-header bg-primary text-light ">
+          <!-- hiển thị tên-->
+          {{ (item.name)}}
+        </div>
+        <img class="card-img-top w-100" [src]="item.image" alt="Title" />
+        <div class="card-body">
+          <h5 class="card-title text-danger">
+            {{item.price | currency}}
+          </h5>
+        </div>
+        <div class="card-footer ">
+          <button class="btn btn-primary" (click)="addToCart(item,1); itemcountEmit()">
+            Mua
+          </button>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+
+
+  <div class="modal fade" id="modalId" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
+    aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitleId">
+            Modal title
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          @if (cartItems.length>0) {
+          <table style="width: 100%;" class="text-center table">
+            <tr>
+              <th>Hình</th>
+              <th>Sản Phẩm</th>
+              <th>Đơn Giá</th>
+              <th>Số Lượng</th>
+              <th>Tiền</th>
+              <th></th>
+            </tr>
+            <!-- hiển thị giỏ hàng -->
+            @for (item of cartItems; track $index) {
+            <tr>
+              <td><img [src]="item.image" style="height: 100px;width: 100px;"></td>
+              <td class="align-middle">{{item.name}}</td>
+              <td class="align-middle">{{item.price | currency: "VND"}}</td>
+              <td class="align-middle">
+                <button class="btn btn-primary" (click)="increment($index); itemcountEmit()">+</button>
+                {{item.quantity}}
+                <button class="btn btn-primary" [disabled]="item.quantity<=1" (click)="decrement($index); itemcountEmit()">-
+                </button>
+              </td>
+              <td class="align-middle">
+                {{item.price*item.quantity | currency: "VND"}}
+              </td>
+              <td class="align-middle"><button class="btn btn-danger" (click)="Remove($index)">Remove</button>
+              </td>
+            </tr>
+            }
+            <tr>
+              <th colspan="3">Tổng tiền</th>
+              <th>{{itemcount()| currency:"VND"}}</th>
+              <th>{{sumTotal() | currency:"VND"}}</th>
+              <th>
+                <button class="btn btn-danger" (click)="RemoveAll()">
+                  Remove All
+                </button>
+              </th>
+            </tr>
+          </table>
+          }
+          @else{
+          <div class="btn btn-danger"> Mời bạn chọn mua !</div> }
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Optional: Place to the bottom of scripts -->
+  <script>
+    const myModal = new bootstrap.Modal(
+      document.getElementById("modalId"),
+      options,
+    );
+  </script>
+
+</div>
